@@ -67,7 +67,6 @@ const AdminLayout = ({ children }) => {
       href: "/sellers",
       isDropdown: true,
       subItems: [
-        { label: "Sellers Card", href: "sellers/sellers-card" },
         { label: "Seller List", href: "/sellers/sellers-list" },
         { label: "seller profile", href: "/sellers/seller-profile" },
       ],
