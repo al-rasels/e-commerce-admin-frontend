@@ -5,10 +5,8 @@ import DescriptionEditor from "./DescriptionEditor";
 import { useFormState } from "../Context/FormContext";
 
 const GeneralForm = ({ onNext }) => {
-  // 1. Get global data and the save function from context
   const { formData, saveTabData } = useFormState();
 
-  // 2. Initialize Hook Form with the 'general' bucket
   const {
     register,
     handleSubmit,
@@ -19,7 +17,6 @@ const GeneralForm = ({ onNext }) => {
     defaultValues: formData.general,
   });
 
-  // 3. Watch description to update word count in real-time
   const description = watch("description", "");
 
   const wordCount = description
@@ -30,7 +27,6 @@ const GeneralForm = ({ onNext }) => {
         .filter(Boolean).length
     : 0;
 
-  // 4. Save to the 'general' section and move to next tab
   const onSubmit = (data) => {
     saveTabData("general", data);
     onNext();
@@ -39,7 +35,6 @@ const GeneralForm = ({ onNext }) => {
   return (
     <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden">
       <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
-        {/* Name Input with Validation */}
         <div className="form-control w-full">
           <label className="label">
             <span className="label-text font-semibold text-gray-700">
@@ -60,7 +55,6 @@ const GeneralForm = ({ onNext }) => {
           )}
         </div>
 
-        {/* Description Editor (Manual Bridge) */}
         <div className="form-control w-full">
           <label className="label">
             <span className="label-text font-semibold text-gray-700">
