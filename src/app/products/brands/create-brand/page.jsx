@@ -12,7 +12,7 @@ const CreateBrand = () => {
   ];
   return (
     <div>
-      <h1 className="text-primary text-4xl font-bold mb-5">Create Brand</h1>
+      <h1 className="text-primary text-3xl font-bold mb-5">Create Brand</h1>
       <TabbedLayout tabs={brandTabs}></TabbedLayout>
     </div>
   );

@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import brandsData from "@/Data/brands.json";
+import variationsData from "@/Data/variations.json";
 import Link from "next/link";
-import { FormProvider } from "@/Components/Context/FormContext";
 
-const BrandsPage = () => {
+const VariationsPage = () => {
   const tableRef = useRef(null);
 
   useEffect(() => {
@@ -21,17 +20,17 @@ const BrandsPage = () => {
       }
 
       table = $(tableRef.current).DataTable({
-        data: brandsData,
+        data: variationsData,
 
         pageLength: 10,
-        pagingType: "numbers", // ✅ no double arrows
+        pagingType: "numbers", // no prev/next arrows
         lengthChange: true,
         ordering: true,
         searching: true,
         info: true,
         destroy: true,
 
-        // ✅ DataTables v1 layout
+        // ✅ Same layout as BrandsPage
         dom:
           "<'dt-top flex justify-between items-center p-4'<'dt-left flex items-center'l<'ml-4 delete-btn'>>f>" +
           "t" +
@@ -46,22 +45,10 @@ const BrandsPage = () => {
               `<input type="checkbox" class="checkbox checkbox-sm row-checkbox" />`,
           },
           { data: "id" },
-          {
-            data: "logo",
-            orderable: false,
-            render: (data) => `
-              <div class="logo-box">
-                <img src="/images/brands/${data}" alt="logo" />
-              </div>
-            `,
-          },
           { data: "name" },
+          { data: "type" },
           {
-            data: "status",
-            render: (data) => `<span class="status-pill">${data}</span>`,
-          },
-          {
-            data: "created",
+            data: "updated",
             className: "text-left",
           },
         ],
@@ -84,7 +71,7 @@ const BrandsPage = () => {
       // ✅ ROW SELECTION LOGIC
       // ============================
 
-      // Row click → select row
+      // Row click → toggle select
       $(tableRef.current).on("click", "tbody tr", function (e) {
         if ($(e.target).is("input")) return;
 
@@ -106,48 +93,43 @@ const BrandsPage = () => {
     initTable();
 
     return () => {
-      if (table) {
-        table.destroy();
-      }
-      if ($) {
-        $(tableRef.current).off();
-      }
+      if (table) table.destroy();
+      if ($) $(tableRef.current).off();
     };
   }, []);
 
   return (
-    <FormProvider>
-      <div className="p-6 bg-[#f8f9fa] min-h-screen">
-        <div className="flex justify-between mb-5">
-          <h1 className="text-3xl text-primary font-bold">Brands</h1>
-          <div>
-            {/* 4. Attach the save function */}
-            <Link
-              href="/products/brands/create-brand"
-              type="button"
-              className="btn btn-primary btn-outline"
-            >
-              Create Brand
-            </Link>
-          </div>
-        </div>
-        <div className="datatable-container">
-          <table ref={tableRef} className="display w-full">
-            <thead>
-              <tr>
-                <th></th>
-                <th>ID</th>
-                <th>Logo</th>
-                <th>Name</th>
-                <th>Status</th>
-                <th className="text-left">Created</th>
-              </tr>
-            </thead>
-          </table>
+    <div className="p-6 bg-[#f8f9fa] min-h-screen">
+      {/* Page Header */}
+      <div className="flex justify-between mb-5">
+        <h1 className="text-3xl text-primary font-bold">Variations</h1>
+        <div>
+          <Link
+            href="/products/variations/create-variation"
+            type="button"
+            className="btn btn-primary btn-outline"
+          >
+            Create Variation
+          </Link>
         </div>
       </div>
-    </FormProvider>
+
+      {/* DataTable */}
+      <div className="datatable-container">
+        <table ref={tableRef} className="display w-full">
+          <thead>
+            <tr>
+              <th></th>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th className="text-left">Updated</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
   );
 };
 
-export default BrandsPage;
+export default VariationsPage;

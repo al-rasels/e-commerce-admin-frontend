@@ -49,6 +49,7 @@ const AdminLayout = ({ children }) => {
         { label: "All Products", href: "/products/all-products" },
         { label: "Categories", href: "/products/categories" },
         { label: "Brands", href: "/products/brands" },
+        { label: "Variations", href: "/products/variations" },
       ],
     },
     {
