@@ -1,14 +1,17 @@
 "use client";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { HiOutlineCalendar, HiOutlineViewGrid } from "react-icons/hi";
+import { HiOutlineCalendar } from "react-icons/hi";
 import { useFormState } from "../../Context/FormContext";
 
 const PricingForm = ({ onNext }) => {
-  // 1. Access the global context
   const { formData, saveTabData } = useFormState();
 
-  // 2. Initialize Hook Form with values from the pricing bucket
+  const variationsArray = formData.variations?.variations || [];
+  const hasVariants =
+    Array.isArray(variationsArray) &&
+    variationsArray.some((v) => v.labels?.some((l) => l.value?.trim() !== ""));
+
   const {
     register,
     handleSubmit,
@@ -23,7 +26,6 @@ const PricingForm = ({ onNext }) => {
     },
   });
 
-  // 3. Save to the pricing section and move to next tab
   const onSubmit = (data) => {
     saveTabData("pricing", data);
     onNext();
@@ -33,11 +35,18 @@ const PricingForm = ({ onNext }) => {
     <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
       <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center">
         <h2 className="text-gray-700 font-medium">Pricing</h2>
-        <HiOutlineViewGrid className="text-gray-400" />
       </div>
 
+      {hasVariants && (
+        <div className="mx-6 mt-4 p-3 bg-blue-50 border border-blue-100 rounded text-blue-700 text-sm flex items-center gap-2">
+          <span>
+            Pricing is managed in the <strong>Variations</strong> tab because
+            this product has variants.
+          </span>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-5">
-        {/* Price Input with Validation */}
         <div className="form-control">
           <label className="label-text mb-2 text-gray-600 font-medium">
             Price <span className="text-red-500">*</span>
@@ -49,10 +58,13 @@ const PricingForm = ({ onNext }) => {
             <input
               type="number"
               step="0.01"
-              {...register("price", { required: "Price is required" })}
+              disabled={hasVariants}
+              {...register("price", {
+                required: !hasVariants ? "Price is required" : false,
+              })}
               className={`input input-bordered rounded-l-none w-full h-10 focus:outline-teal-500 ${
                 errors.price ? "border-red-500" : ""
-              }`}
+              } ${hasVariants ? "bg-gray-100 cursor-not-allowed" : ""}`}
             />
           </div>
           {errors.price && (
@@ -62,7 +74,6 @@ const PricingForm = ({ onNext }) => {
           )}
         </div>
 
-        {/* Special Price */}
         <div className="form-control">
           <label className="label-text mb-2 text-gray-600 font-medium">
             Special Price
@@ -74,27 +85,31 @@ const PricingForm = ({ onNext }) => {
             <input
               type="number"
               step="0.01"
+              disabled={hasVariants}
               {...register("specialPrice")}
-              className="input input-bordered rounded-l-none w-full h-10 focus:outline-teal-500"
+              className={`input input-bordered rounded-l-none w-full h-10 focus:outline-teal-500 ${
+                hasVariants ? "bg-gray-100 cursor-not-allowed" : ""
+              }`}
             />
           </div>
         </div>
 
-        {/* Special Price Type */}
         <div className="form-control">
           <label className="label-text mb-2 text-gray-600 font-medium">
             Special Price Type
           </label>
           <select
+            disabled={hasVariants}
             {...register("type")}
-            className="select select-bordered w-full h-10 min-h-0 font-normal focus:outline-teal-500"
+            className={`select select-bordered w-full h-10 min-h-0 font-normal focus:outline-teal-500 ${
+              hasVariants ? "bg-gray-100 cursor-not-allowed" : ""
+            }`}
           >
             <option value="Fixed">Fixed</option>
             <option value="Percentage">Percentage</option>
           </select>
         </div>
 
-        {/* Date Ranges */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="form-control">
             <label className="label-text mb-2 text-gray-600 font-medium">
@@ -106,8 +121,11 @@ const PricingForm = ({ onNext }) => {
               </span>
               <input
                 type="date"
+                disabled={hasVariants}
                 {...register("start")}
-                className="input input-bordered rounded-l-none w-full h-10 focus:outline-teal-500"
+                className={`input input-bordered rounded-l-none w-full h-10 focus:outline-teal-500 ${
+                  hasVariants ? "bg-gray-100 cursor-not-allowed" : ""
+                }`}
               />
             </div>
           </div>
@@ -121,14 +139,16 @@ const PricingForm = ({ onNext }) => {
               </span>
               <input
                 type="date"
+                disabled={hasVariants}
                 {...register("end")}
-                className="input input-bordered rounded-l-none w-full h-10 focus:outline-teal-500"
+                className={`input input-bordered rounded-l-none w-full h-10 focus:outline-teal-500 ${
+                  hasVariants ? "bg-gray-100 cursor-not-allowed" : ""
+                }`}
               />
             </div>
           </div>
         </div>
 
-        {/* Footer Navigation */}
         <div className="flex justify-end mt-8 pt-4 border-t border-gray-100">
           <button
             type="submit"

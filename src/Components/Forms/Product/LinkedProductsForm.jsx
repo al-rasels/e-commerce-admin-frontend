@@ -1,14 +1,11 @@
 "use client";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { HiOutlineViewGrid } from "react-icons/hi";
 import { useFormState } from "../../Context/FormContext";
 
 const LinkedProductsForm = () => {
-  // 1. Access the global context
   const { formData, saveTabData } = useFormState();
 
-  // 2. Initialize Hook Form with current context values
   const { register, handleSubmit } = useForm({
     defaultValues: formData.linkedProducts || {
       upSells: "",
@@ -17,8 +14,6 @@ const LinkedProductsForm = () => {
     },
   });
 
-  // 3. Save to the context
-  // Since this is the last tab, you can call saveTabData on change or via a final local button
   const onSubmit = (data) => {
     saveTabData("linkedProducts", data);
   };
@@ -27,12 +22,8 @@ const LinkedProductsForm = () => {
     <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
       <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center bg-white">
         <h2 className="text-gray-700 font-medium">Linked Products</h2>
-        <HiOutlineViewGrid className="text-gray-400" />
       </div>
 
-      {/* We use onChange on the inputs to ensure the global state is always up to date 
-         even without a 'Continue' button on the last tab.
-      */}
       <form onBlur={handleSubmit(onSubmit)} className="p-6 space-y-5">
         <div className="form-control">
           <label className="label-text mb-2 text-gray-600 font-medium">

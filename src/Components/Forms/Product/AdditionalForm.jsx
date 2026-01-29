@@ -1,16 +1,16 @@
 "use client";
 import React from "react";
-import { useForm } from "react-hook-form";
-import { HiOutlineCalendar, HiOutlineViewGrid } from "react-icons/hi";
+import { useForm, Controller } from "react-hook-form";
+import { HiOutlineCalendar } from "react-icons/hi";
 import { useFormState } from "../../Context/FormContext";
+import DescriptionEditor from "./DescriptionEditor";
 
 const AdditionalForm = ({ onNext }) => {
-  // 1. Pull global state and save function from context
   const { formData, saveTabData } = useFormState();
 
-  // 2. Initialize Hook Form with values from the 'additional' section
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -21,30 +21,30 @@ const AdditionalForm = ({ onNext }) => {
     },
   });
 
-  // 3. Save to the 'additional' section and move next
   const onSubmit = (data) => {
-    saveTabData("additional", data); // Merges these fields into formData.additional
+    saveTabData("additional", data);
     onNext();
   };
 
   return (
     <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
-      {/* Header */}
       <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center bg-white">
         <h2 className="text-gray-700 font-medium">Additional</h2>
-        <HiOutlineViewGrid className="text-gray-400" />
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-5">
-        {/* Short Description */}
+        {/* Rich Text Editor Integration */}
         <div className="form-control">
           <label className="label-text mb-2 text-gray-600 font-medium">
             Short Description
           </label>
-          <textarea
-            {...register("shortDescription")}
-            className="textarea textarea-bordered w-full h-32 focus:outline-teal-500"
-          ></textarea>
+          <Controller
+            name="shortDescription"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <DescriptionEditor value={value} onChange={onChange} />
+            )}
+          />
         </div>
 
         {/* Date Ranges */}
@@ -80,7 +80,6 @@ const AdditionalForm = ({ onNext }) => {
           </div>
         </div>
 
-        {/* Navigation Button */}
         <div className="flex justify-end mt-8 pt-4 border-t border-gray-100">
           <button
             type="submit"

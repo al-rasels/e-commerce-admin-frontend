@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-// 1. Import your Context and Hook
 
 import AdditionalForm from "@/Components/Forms/Product/AdditionalForm";
 import AttributesForm from "@/Components/Forms/Product/AttributesForm";
@@ -14,22 +13,18 @@ import VariationsForm from "@/Components/Forms/Product/VariationsForm";
 import TabbedLayout from "@/Components/Layout/TabbedLayout";
 import { FormProvider, useFormState } from "@/Components/Context/FormContext";
 
-// Create a wrapper component to access the context hook
 const CreateProductContent = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // 2. Access the global form data from context
   const { formData } = useFormState();
 
   const nextTab = () => {
     setSelectedIndex((prev) => prev + 1);
   };
 
-  // 3. Final Save Function
   const handleSaveProduct = () => {
     console.log("--- FINAL PRODUCT DATA ---");
     console.log(formData);
-    // You can now see: formData.general, formData.media, formData.pricing, etc.
   };
 
   const productTabs = [
@@ -49,7 +44,6 @@ const CreateProductContent = () => {
       <div className="flex justify-between mb-5">
         <h1 className="text-3xl text-primary font-bold">Add New Product</h1>
         <div>
-          {/* 4. Attach the save function */}
           <button
             type="button"
             onClick={handleSaveProduct}
@@ -68,7 +62,6 @@ const CreateProductContent = () => {
   );
 };
 
-// 5. Main export must be wrapped in the Provider
 export default function CreateProduct() {
   return (
     <FormProvider>

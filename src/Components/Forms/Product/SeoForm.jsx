@@ -1,14 +1,11 @@
 "use client";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { HiOutlineViewGrid } from "react-icons/hi";
 import { useFormState } from "../../Context/FormContext";
 
 const SeoForm = ({ onNext }) => {
-  // 1. Pull global state and save function from context
   const { formData, saveTabData } = useFormState();
 
-  // 2. Initialize Hook Form with current context values for the 'seo' section
   const {
     register,
     handleSubmit,
@@ -21,9 +18,8 @@ const SeoForm = ({ onNext }) => {
     },
   });
 
-  // 3. Save to the 'seo' section and move next
   const onSubmit = (data) => {
-    saveTabData("seo", data); // Merges these fields into formData.seo
+    saveTabData("seo", data);
     onNext();
   };
 
@@ -31,7 +27,6 @@ const SeoForm = ({ onNext }) => {
     <div className="w-full bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
       <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center bg-white">
         <h2 className="text-gray-700 font-medium">SEO</h2>
-        <HiOutlineViewGrid className="text-gray-400" />
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-5">
