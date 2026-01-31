@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-const GeneralForm = () => {
+const AttributeSetsGeneralForm = () => {
   const [name, setName] = useState("");
 
   const handleSubmit = (e) => {
@@ -46,7 +46,8 @@ const GeneralForm = () => {
             <div className="flex-1">
               <button
                 type="submit"
-                className="bg-[#088178] hover:bg-[#066a62] text-white px-6 py-2.5 rounded-lg text-sm font-semibold shadow-sm hover:shadow transition-all duration-200">
+                className="bg-[#088178] hover:bg-[#066a62] text-white px-6 py-2.5 rounded-lg text-sm font-semibold shadow-sm hover:shadow transition-all duration-200"
+              >
                 Save
               </button>
             </div>
@@ -57,4 +58,4 @@ const GeneralForm = () => {
   );
 };
 
-export default GeneralForm;
+export default AttributeSetsGeneralForm;
