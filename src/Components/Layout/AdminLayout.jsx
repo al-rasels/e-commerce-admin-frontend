@@ -28,6 +28,7 @@ import { LuLayoutGrid } from "react-icons/lu";
 import Logo from "../Buttons/Logo";
 import { usePathname } from "next/navigation";
 import NavLink from "../Buttons/NavLink";
+import { BiImport } from "react-icons/bi";
 
 const AdminLayout = ({ children }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -83,6 +84,13 @@ const AdminLayout = ({ children }) => {
       label: "Transactions",
       href: "/transactions",
       isDropdown: true,
+      subItems: [
+        { label: "Transaction", href: "/transaction/transaction" },
+        {
+          label: "Transaction Details",
+          href: "/transaction/transaction-details",
+        },
+      ],
     },
     {
       icon: <FiUser size={20} />,
@@ -107,6 +115,12 @@ const AdminLayout = ({ children }) => {
       icon: <FiPieChart size={20} />,
       label: "Media",
       href: "/media",
+      isDropdown: false,
+    },
+    {
+      icon: <BiImport size={20} />,
+      label: "Import",
+      href: "/import",
       isDropdown: false,
     },
     {
