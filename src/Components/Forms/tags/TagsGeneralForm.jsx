@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-const GeneralForm = () => {
+const TagsGeneralForm = () => {
   const [name, setName] = useState("");
 
   const handleSubmit = (e) => {
@@ -54,4 +54,4 @@ const GeneralForm = () => {
   );
 };
 
-export default GeneralForm;
+export default TagsGeneralForm;
