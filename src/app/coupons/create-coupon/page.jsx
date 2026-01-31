@@ -3,12 +3,12 @@ import BrandMediaForm from "@/Components/Forms/Brand/BrandMediaForm";
 import React from "react";
 
 
-import CouponGeneralForm from "@/Components/Forms/Coupons/CouponsGeneralForm";
+import CouponsGeneralForm from "@/Components/Forms/Coupons/CouponsGeneralForm";
 import CouponsUsageRestrictionForm from "@/Components/Forms/Coupons/CouponsUsageRestrictionForm";
 import CouponsUsageLimitForm from "@/Components/Forms/Coupons/CouponsUsageLimitForm";
 const CreateCoupon = () => {
   const couponsTabs = [
-    { label: "General", component: <CouponGeneralForm /> },
+    { label: "General", component: <CouponsGeneralForm /> },
     { label: "Usage Restrictions", component: <CouponsUsageRestrictionForm /> },
     { label: "Usage Limit", component: <CouponsUsageLimitForm /> },
   ];

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Calendar } from "lucide-react";
 
-const CouponGeneralForm = () => {
+const CouponsGeneralForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     code: "",
@@ -231,4 +231,4 @@ const CouponGeneralForm = () => {
   );
 };
 
-export default CouponGeneralForm;
+export default CouponsGeneralForm;
