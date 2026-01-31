@@ -1,6 +1,6 @@
 import React from "react";
 import TabbedLayout from "@/Components/Layout/TabbedLayout";
-import TagsGeneralForm from "@/Components/Forms/tags/TagsGeneralForm";
+import TagsGeneralForm from "@/Components/Forms/Tags/TagsGeneralForm";
 
 const CreateTags = () => {
   const tagTabs = [{ label: "General", component: <TagsGeneralForm /> }];

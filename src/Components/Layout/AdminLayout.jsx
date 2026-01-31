@@ -23,6 +23,7 @@ import {
   FiChevronDown,
   FiSearch,
 } from "react-icons/fi";
+import { RiFlashlightLine, RiCouponLine } from "react-icons/ri";
 import { LuLayoutGrid } from "react-icons/lu";
 import Logo from "../Buttons/Logo";
 import { usePathname } from "next/navigation";
@@ -50,9 +51,9 @@ const AdminLayout = ({ children }) => {
         { label: "Categories", href: "/products/categories" },
         { label: "Brands", href: "/products/brands" },
         { label: "Attributes", href: "/products/attributes" },
-        { label: "Tags", href: "/products/tags" },
         { label: "Attributes Sets", href: "/products/attribute-sets" },
         { label: "Variations", href: "/products/variations" },
+        { label: "Tags", href: "/products/tags" },
       ],
     },
     {
@@ -109,9 +110,21 @@ const AdminLayout = ({ children }) => {
       isDropdown: false,
     },
     {
-      icon: <FiPieChart size={20} />,
+      icon: <FiShoppingBag size={20} />,
       label: "Product Details",
       href: "/product-details",
+      isDropdown: false,
+    },
+    {
+      icon: <RiFlashlightLine size={20} />,
+      label: "Flash Sales",
+      href: "/flash-sales",
+      isDropdown: false,
+    },
+    {
+      icon: <RiCouponLine size={20} />,
+      label: "Coupons",
+      href: "/coupons",
       isDropdown: false,
     },
   ];
