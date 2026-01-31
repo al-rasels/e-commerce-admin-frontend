@@ -1,8 +1,6 @@
 import TabbedLayout from "@/Components/Layout/TabbedLayout";
-import BrandMediaForm from "@/Components/Forms/Brand/BrandMediaForm";
 import React from "react";
-import AttributeSetsGeneralForm from "@/Components/Forms/AttributeSets/AttributeSetsGeneralForm";
-import CreateAttribute from "./../../attributes/create-attribute/page";
+import AttributeSetsGeneralForm from "@/Components/Forms/Attribute-sets/AttributeSetsGeneralForm";
 
 const CreateAttributeSet = () => {
   const attributeSetsTabs = [
