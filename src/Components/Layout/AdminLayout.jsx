@@ -141,6 +141,12 @@ const AdminLayout = ({ children }) => {
       href: "/coupons",
       isDropdown: false,
     },
+    {
+      icon: <FiCast size={20} />,
+      label: "Login",
+      href: "/login",
+      isDropdown: false,
+    },
   ];
 
   const settingItems = [
