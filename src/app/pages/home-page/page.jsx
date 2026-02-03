@@ -1,17 +1,9 @@
-'use client'
-import React from 'react'
-import PreviewPanel from '@/Components/Builder/PreviewPanel'
-import SelectionPanel from '@/Components/Builder/SelectionPanel'
-import VarientsPanel from '@/Components/Builder/VarientsPanel'
+"use client";
+import PageBuilder from "@/Components/Builder/PageBuilder";
+import React from "react";
 
 const HomePage = () => {
-  return (
-    <div className="grid h-screen grid-cols-[260px_1fr_350px]">
-      <SelectionPanel />
-      <PreviewPanel />
-      <VarientsPanel />
-    </div>
-  )
-}
+  return <PageBuilder />;
+};
 
-export default HomePage
+export default HomePage;
