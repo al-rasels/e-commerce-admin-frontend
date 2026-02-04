@@ -9,13 +9,18 @@ const MediaForm = ({ onNext }) => {
   const { formData, saveTabData } = useFormState();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [images, setImages] = useState(formData.media?.images || []);
+  const variationsArray = formData.variations?.variations || [];
+  const hasVariants =
+    Array.isArray(variationsArray) &&
+    variationsArray.some((v) => v.labels?.some((l) => l.value?.trim() !== ""));
 
+  const [images, setImages] = useState(formData.media?.images || []);
   const { handleSubmit } = useForm();
 
   const handleSelectMedia = (mediaItem) => {
-    const url = mediaItem.thumbnail || mediaItem.preview;
+    if (hasVariants) return;
 
+    const url = mediaItem.thumbnail || mediaItem.preview;
     const updatedImages = [
       ...images,
       {
@@ -30,6 +35,7 @@ const MediaForm = ({ onNext }) => {
   };
 
   const removeImage = (id) => {
+    if (hasVariants) return;
     setImages(images.filter((img) => img.id !== id));
   };
 
@@ -44,8 +50,19 @@ const MediaForm = ({ onNext }) => {
         <h2 className="text-gray-700 font-medium">Media</h2>
       </div>
 
+      {hasVariants && (
+        <div className="mx-6 mt-4 p-3 bg-blue-50 border border-blue-100 rounded text-blue-700 text-sm flex items-center gap-2">
+          <span>
+            Media is managed in the <strong>Variations</strong> tab because this
+            product has variants.
+          </span>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit(onSubmit)} className="p-6">
-        <div className="flex flex-wrap gap-4">
+        <div
+          className={`flex flex-wrap gap-4 ${hasVariants ? "opacity-60" : ""}`}
+        >
           {images.map((img) => (
             <div
               key={img.id}
@@ -56,20 +73,26 @@ const MediaForm = ({ onNext }) => {
                 alt="Selected"
                 className="w-full h-full object-cover"
               />
-              <button
-                type="button"
-                onClick={() => removeImage(img.id)}
-                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                <HiX size={14} />
-              </button>
+              {!hasVariants && (
+                <button
+                  type="button"
+                  onClick={() => removeImage(img.id)}
+                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <HiX size={14} />
+                </button>
+              )}
             </div>
           ))}
 
           {images.length === 0 && (
             <div
-              onClick={() => setIsModalOpen(true)}
-              className="w-40 h-40 border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors text-gray-300"
+              onClick={() => !hasVariants && setIsModalOpen(true)}
+              className={`w-40 h-40 border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center transition-colors text-gray-300 ${
+                hasVariants
+                  ? "cursor-not-allowed bg-gray-50"
+                  : "cursor-pointer hover:bg-gray-50"
+              }`}
             >
               <HiOutlinePhotograph size={64} strokeWidth={1} />
             </div>
@@ -78,8 +101,13 @@ const MediaForm = ({ onNext }) => {
           {images.length > 0 && (
             <button
               type="button"
+              disabled={hasVariants}
               onClick={() => setIsModalOpen(true)}
-              className="w-40 h-40 border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:text-primary transition-all text-gray-400 bg-gray-50/50"
+              className={`w-40 h-40 border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center transition-all text-gray-400 bg-gray-50/50 ${
+                hasVariants
+                  ? "cursor-not-allowed opacity-50"
+                  : "hover:border-primary hover:text-primary"
+              }`}
             >
               <HiPlus size={32} />
               <span className="text-xs mt-2 font-medium">Add More</span>

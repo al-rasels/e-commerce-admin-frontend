@@ -148,6 +148,22 @@ const PricingForm = ({ onNext }) => {
             </div>
           </div>
         </div>
+        {/* Tax Class */}
+        <div className="form-control w-full">
+          <label className="label">
+            <span className="label-text font-semibold text-gray-700">
+              Tax Class
+            </span>
+          </label>
+          <select
+            {...register("taxClass")}
+            className="select select-bordered w-full h-11 focus:outline-teal-500 font-normal"
+          >
+            <option value="">Please Select</option>
+            <option value="standard">Standard Tax</option>
+            <option value="exempt">Tax Exempt</option>
+          </select>
+        </div>
 
         <div className="flex justify-end mt-8 pt-4 border-t border-gray-100">
           <button

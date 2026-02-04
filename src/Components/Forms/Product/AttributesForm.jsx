@@ -23,7 +23,7 @@ const ATTRIBUTE_OPTIONS = {
 const AttributesForm = ({ onNext }) => {
   const { formData, saveTabData } = useFormState();
 
-  const { register, control, handleSubmit } = useForm({
+  const { register, control, handleSubmit, setValue } = useForm({
     defaultValues: {
       attributes:
         formData.attributes?.length > 0
@@ -58,7 +58,7 @@ const AttributesForm = ({ onNext }) => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="p-4">
-        <table className="w-full text-left">
+        <table className="w-full text-left table-fixed">
           <thead>
             <tr className="text-gray-400 text-sm font-normal border-b border-gray-100">
               <th className="pb-3 font-normal">Attribute</th>
@@ -76,7 +76,11 @@ const AttributesForm = ({ onNext }) => {
                 <tr key={field.id} className="group">
                   <td className="py-3 pr-4 align-top">
                     <select
-                      {...register(`attributes.${index}.name`)}
+                      {...register(`attributes.${index}.name`, {
+                        onChange: (e) => {
+                          setValue(`attributes.${index}.values`, []);
+                        },
+                      })}
                       className="select select-bordered w-full h-10 min-h-0 font-normal focus:outline-teal-500 bg-white"
                     >
                       <option value="">Please Select</option>

@@ -148,8 +148,7 @@ const AdminLayout = ({ children }) => {
       isDropdown: true,
       subItems: [
         { label: "HomePage", href: "/pages/home-page" },
-        { label: "ProductDetails", href: "/pages/product-details" }
-
+        { label: "ProductDetails", href: "/pages/product-details" },
       ],
     },
     {
@@ -158,7 +157,6 @@ const AdminLayout = ({ children }) => {
       href: "/login",
       isDropdown: false,
     },
-
   ];
 
   const settingItems = [
@@ -231,7 +229,7 @@ const AdminLayout = ({ children }) => {
         <aside
           className={`
     ${isCollapsed ? "w-20 overflow-visible" : "w-64 overflow-x-hidden"} 
-    transition-all duration-300 min-h-full bg-white border-r border-gray-100 
+    transition-all duration-300 h-screen bg-white border-r border-gray-100 
     flex flex-col z-40
   `}
         >
@@ -270,11 +268,10 @@ const AdminLayout = ({ children }) => {
                   {item.isDropdown && !isCollapsed ? (
                     <details open={isActive}>
                       {" "}
-                      {/* Automatically open if a sub-link is active */}
                       <summary
                         className={`py-3 hover:bg-transparent hover:text-primary ${
                           isActive
-                            ? "text-primary bg-secondary font-medium"
+                            ? "text-primary bg-secondary hover:bg-secondary! font-medium"
                             : ""
                         }`}
                       >

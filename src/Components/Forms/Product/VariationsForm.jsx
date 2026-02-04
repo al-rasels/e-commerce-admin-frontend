@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import {
   HiOutlineTrash,
@@ -77,12 +77,21 @@ const VariationsForm = ({ onNext }) => {
   const watchedVariations = useWatch({ control, name: "variations" });
   const watchedDefaultVariant = useWatch({ control, name: "default_variant" });
 
-  const activeLabels =
-    watchedVariations
-      ?.flatMap((v, vIdx) =>
-        (v.labels || []).map((l, lIdx) => ({ ...l, vIdx, lIdx })),
-      )
-      .filter((l) => l.value?.trim() !== "") || [];
+  const activeLabels = useMemo(() => {
+    return (
+      watchedVariations
+        ?.flatMap((v, vIdx) =>
+          (v.labels || []).map((l, lIdx) => ({ ...l, vIdx, lIdx })),
+        )
+        .filter((l) => l.value?.trim() !== "") || []
+    );
+  }, [watchedVariations]);
+
+  useEffect(() => {
+    if (activeLabels.length > 0 && !watchedDefaultVariant) {
+      setValue("default_variant", activeLabels[0].value);
+    }
+  }, [activeLabels, watchedDefaultVariant, setValue]);
 
   useEffect(() => {
     watchedVariations?.forEach((v, i) => {
