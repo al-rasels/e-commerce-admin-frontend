@@ -13,7 +13,7 @@ const ExportModal = ({ showExport, setShowExport, getExportJSON }) => {
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-gray-100 text-base font-bold">
-            📦 Export Page JSON
+            📦 Export as JSON
           </h3>
           <button
             className="bg-none border-none text-gray-500 text-xl cursor-pointer"
