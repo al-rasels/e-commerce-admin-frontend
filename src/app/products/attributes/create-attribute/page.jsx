@@ -1,12 +1,10 @@
 import TabbedLayout from "@/Components/Layout/TabbedLayout";
 import React from "react";
 
-import AttributeGeneralForm from "@/Components/Forms/Attribute/AttributeGeneralForm";
 import AttributeValuesForm from "@/Components/Forms/Attribute/AttributeValueForm";
 
 const CreateAttribute = () => {
   const attributeTabs = [
-    { label: "General", component: <AttributeGeneralForm /> },
     { label: "Value", component: <AttributeValuesForm /> },
   ];
   return (
