@@ -1,36 +1,44 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import tagsData from "@/Data/tags.json";
 import Link from "next/link";
 import { FormProvider } from "@/Components/Context/FormContext";
+import { useTagsStore } from "@/store/useTagsStore";
 
 const TagsPage = () => {
+  const { tags, fetchProductTags } = useTagsStore();
   const tableRef = useRef(null);
+  const tableInstance = useRef(null); // keep reference to DataTable instance
 
+  // Fetch tags on mount
   useEffect(() => {
-    let table;
+    fetchProductTags();
+  }, [fetchProductTags]);
+
+  // Initialize DataTable once
+  useEffect(() => {
     let $;
+    let DataTable;
 
     const initTable = async () => {
       $ = (await import("jquery")).default;
-      const DataTable = (await import("datatables.net-dt")).default;
+      DataTable = (await import("datatables.net-dt")).default;
 
       if (!$.fn.DataTable) {
         DataTable(window, $);
       }
 
-      table = $(tableRef.current).DataTable({
-        data: tagsData,
+      // Initialise with empty data (will be populated later)
+      tableInstance.current = $(tableRef.current).DataTable({
+        data: tags, // initially empty
         pageLength: 10,
-        pagingType: "numbers", // ✅ no double arrows
+        pagingType: "numbers",
         lengthChange: true,
         ordering: true,
         searching: true,
         info: true,
-        destroy: true,
+        destroy: true, // allows safe re-init if needed
 
-        // ✅ DataTables v1 layout
         dom:
           "<'dt-top flex justify-between items-center p-4'<'dt-left flex items-center'l<'ml-4 delete-btn'>>f>" +
           "t" +
@@ -44,20 +52,19 @@ const TagsPage = () => {
             render: () =>
               `<input type="checkbox" class="checkbox checkbox-sm row-checkbox" />`,
           },
-          { data: "id" },
+          { data: "id", title: "ID" },
           {
             data: "name",
-            orderable: false,
-            render: (data) => `
-              <div class="name-cell flex items-center gap-3">
-               ${data}
-              </div>
-            `,
+            title: "Name",
+            render: (data) =>
+              `<div class="name-cell flex items-center gap-3">${data}</div>`,
           },
-
           {
-            data: "created",
+            data: "createdAt",
+            title: "Created",
             className: "text-left",
+            render: (data) =>
+              `<div class="name-cell flex items-center gap-3">${data}</div>`,
           },
         ],
 
@@ -68,31 +75,24 @@ const TagsPage = () => {
         },
       });
 
-      // ✅ Inject Delete button
+      // Inject Delete button into the custom toolbar
       $(".delete-btn").html(`
         <button class="btn btn-outline btn-sm">
           Delete
         </button>
       `);
 
-      // ============================
-      // ✅ ROW SELECTION LOGIC
-      // ============================
-
-      // Row click → select row
+      // Row selection logic (delegated)
       $(tableRef.current).on("click", "tbody tr", function (e) {
         if ($(e.target).is("input")) return;
-
         $(this).toggleClass("selected");
         $(this)
           .find(".row-checkbox")
           .prop("checked", $(this).hasClass("selected"));
       });
 
-      // Checkbox click → sync row
       $(tableRef.current).on("click", ".row-checkbox", function (e) {
         e.stopPropagation();
-
         const row = $(this).closest("tr");
         row.toggleClass("selected", this.checked);
       });
@@ -100,15 +100,29 @@ const TagsPage = () => {
 
     initTable();
 
+    // Cleanup
     return () => {
-      if (table) {
-        table.destroy();
+      if (tableInstance.current) {
+        tableInstance.current.destroy();
+        tableInstance.current = null;
       }
-      if ($) {
+      // Remove all event handlers attached to the table
+      if (window.$ && tableRef.current) {
         $(tableRef.current).off();
       }
-    };
-  }, []);
+    };;
+  }, []); // empty deps – only run once
+
+  // Update table data whenever tags change
+  useEffect(() => {
+    if (tableInstance.current && tags.length > 0) {
+      // Clear existing rows and add new data
+      tableInstance.current.clear().rows.add(tags).draw();
+    } else if (tableInstance.current && tags.length === 0) {
+      // If tags becomes empty, clear the table
+      tableInstance.current.clear().draw();
+    }
+  }, [tags]);
 
   return (
     <FormProvider>
@@ -116,10 +130,8 @@ const TagsPage = () => {
         <div className="flex justify-between mb-5">
           <h1 className="text-3xl text-primary font-bold">Tags</h1>
           <div>
-            {/* 4. Attach the save function */}
             <Link
               href="/products/tags/create-tags"
-              type="button"
               className="btn btn-primary btn-outline">
               Create Tags
             </Link>

@@ -1,37 +1,44 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-
-import attributeSetsData from "@/Data/attributeSets.json";
 import Link from "next/link";
 import { FormProvider } from "@/Components/Context/FormContext";
+import { useAttibutesSetsStore } from "@/store/useAttributesSetsStore";
 
 const AttributesSetPage = () => {
+  const { attributesSets, fetchAttributesSets } = useAttibutesSetsStore();
   const tableRef = useRef(null);
+  const tableInstance = useRef(null); // store DataTable instance
 
+  // Fetch attribute sets on mount
   useEffect(() => {
-    let table;
+    fetchAttributesSets();
+  }, [fetchAttributesSets]);
+
+  // Initialize DataTable once
+  useEffect(() => {
     let $;
+    let DataTable;
 
     const initTable = async () => {
       $ = (await import("jquery")).default;
-      const DataTable = (await import("datatables.net-dt")).default;
+      DataTable = (await import("datatables.net-dt")).default;
 
       if (!$.fn.DataTable) {
         DataTable(window, $);
       }
 
-      table = $(tableRef.current).DataTable({
-        data: attributeSetsData,
+      // Initialise with empty data (will be populated later)
+      tableInstance.current = $(tableRef.current).DataTable({
+        data: attributesSets, // initially empty
         pageLength: 10,
-        pagingType: "numbers", // ✅ no double arrows
+        pagingType: "numbers",
         lengthChange: true,
         ordering: true,
         searching: true,
         info: true,
         destroy: true,
 
-        // ✅ DataTables v1 layout
         dom:
           "<'dt-top flex justify-between items-center p-4'<'dt-left flex items-center'l<'ml-4 delete-btn'>>f>" +
           "t" +
@@ -55,9 +62,12 @@ const AttributesSetPage = () => {
               </div>
             `,
           },
-
           {
-            data: "created",
+            data: "slug",
+            className: "text-left",
+          },
+          {
+            data: "createdAt",
             className: "text-left",
           },
         ],
@@ -69,47 +79,50 @@ const AttributesSetPage = () => {
         },
       });
 
-      // ✅ Inject Delete button
+      // Inject Delete button
       $(".delete-btn").html(`
         <button class="btn btn-outline btn-sm">
           Delete
         </button>
       `);
 
-      // ============================
-      // ✅ ROW SELECTION LOGIC
-      // ============================
-
-      // Row click → select row
+      // Row selection logic
       $(tableRef.current).on("click", "tbody tr", function (e) {
         if ($(e.target).is("input")) return;
-
         $(this).toggleClass("selected");
         $(this)
           .find(".row-checkbox")
           .prop("checked", $(this).hasClass("selected"));
       });
 
-      // Checkbox click → sync row
       $(tableRef.current).on("click", ".row-checkbox", function (e) {
         e.stopPropagation();
-
         const row = $(this).closest("tr");
         row.toggleClass("selected", this.checked);
       });
-    };
+    };;
 
     initTable();
 
     return () => {
-      if (table) {
-        table.destroy();
+      if (tableInstance.current) {
+        tableInstance.current.destroy();
+        tableInstance.current = null;
       }
-      if ($) {
+      if (window.$ && tableRef.current) {
         $(tableRef.current).off();
       }
     };
-  }, []);
+  }, []); // empty deps – only run once
+
+  // Update table data when attributesSets changes
+  useEffect(() => {
+    if (tableInstance.current && attributesSets.length > 0) {
+      tableInstance.current.clear().rows.add(attributesSets).draw();
+    } else if (tableInstance.current && attributesSets.length === 0) {
+      tableInstance.current.clear().draw();
+    }
+  }, [attributesSets]);
 
   return (
     <FormProvider>
@@ -117,10 +130,8 @@ const AttributesSetPage = () => {
         <div className="flex justify-between mb-5">
           <h1 className="text-3xl text-primary font-bold">Attribute Sets</h1>
           <div>
-            {/* 4. Attach the save function */}
             <Link
               href="/products/attribute-sets/create-attribute-set"
-              type="button"
               className="btn btn-primary btn-outline">
               Create Attribute Sets
             </Link>
@@ -133,6 +144,7 @@ const AttributesSetPage = () => {
                 <th></th>
                 <th>ID</th>
                 <th>Name</th>
+                <th>Slug</th>
                 <th className="text-left">Created</th>
               </tr>
             </thead>
